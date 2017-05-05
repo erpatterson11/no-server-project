@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app='weatherApp'>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href='bundle.css'>
+    <title></title>
+</head>
+
+<body ng-controller='homeCtrl'>
+
+
+
+    <nav>
+        <!-- <current-weather temp='{{hourly[selectedTime].temperature}}' icon='{{hourly[selectedTime].icon}}' precipProb='{{hourly[selectedTime].precipProbability}}' wind='{{hourly[selectedTime].windSpeed}}'></current-weather> -->
+        <div class="data-container">
+            <div id='currentTime'>{{unixToTime(hourly[selectedTime].time) | date: "MMM d, yyyy hh:mm a"}}</div>
+            <div id='currentTemp'>{{hourly[selectedTime].temperature | number: 0 }}&degF</div>
+        </div>
+
+        <input id="timeSlider" type="range" name="timeSelector" min='0' max='48' ng-model='selectedTime'>
+
+    </nav>
+
+    <!-- <div class="buttons">
+  <button id="btnPlay">Play</button>
+  <button id="btnPause">Pause</button>
+  <button id="btnResume">Resume</button>
+  <button id="btnReverse">Reverse</button>
+  <button id="btnSpeedUp">Speed Up</button>
+  <button id="btnSlowDown">Slow Down</button>
+  <button id="btnSeek">Seek</button>
+  <button id="btnProgress">Progress</button>
+  <button id="btnRestart">Restart</button>
+</div> -->
+
+    <div id="artwork-container">
+
+    </div>
+
+    <!-- <daily-weather ng-repeat='day in daily' temp='{{day.temperatureMax}}' icon='{{day.icon}}' precip='{{day.precipProbability}}' wind='{{day.windSpeed}}'></daily-weather> -->
+
+
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0/angular-ui-router.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script <script src='bundle.js'></script>
+
+    <!-- <script src='./app/app.js'></script>
+    <script src='./app/routes/home/homeCtrl.js'></script>
+    <script src='./app/directives/dailyWeather/dailyWeatherDir.js'></script>
+    <script src='./app/directives/currentWeather/curWeathDir.js'></script>
+    <script src='./app/services/mainService.js'></script>
+    <script src='./app/services/weatherData.js'></script> -->
+
+</body>
+
+</html>
