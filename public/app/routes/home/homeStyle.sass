@@ -7,6 +7,11 @@
   padding: 0
   box-sizing: border-box
   color: #eee
+  overflow: hidden
+
+body
+  width: 100vw
+  height: 100vh
 
 //-----------------------------------------------------------------------------
 //                               Nav Bar
@@ -32,16 +37,15 @@ nav
 
 
 #artwork-container
-  width: 100vw
-  height: 100vh
-  position: absolute
-  top: 0
-  left: 0
   background-image: radial-gradient(circle at 0% 80%, #e3e5f3, #e38c59, #a33d4b,#46142b)
   z-index: -1
 
-
-
+.background
+    width: 100vw
+    height: 100vh
+    position: absolute
+    top: 0
+    left: 0
 
 // .buttons
 //   position: fixed
@@ -51,6 +55,40 @@ nav
 //     width: 140px
 //     display: block
 //     margin-bottom: 5px
+
+
+#mountainSVG
+  position: fixed
+  max-height: 65vh
+  bottom: 0
+  left: 0
+
+
+// .sun-pulse
+//   background-image: radial-gradient(circle at 50% 60%,rgb(255,194,82), rgb(70,20,43) 65%, rgba(0,0,0,0))
+//   opacity: 0.2
+//   animation: pulse 3s ease-in-out infinite
+
+
+.sun
+    // background-image: radial-gradient(circle at 50% 60%, rgb(255,194,82) 3%, rgba(0,0,0,0) 10%, rgba(0,0,0,0))
+
+//
+// @keyframes pulse
+//   0%, 100%
+//       opacity: 0.2
+//
+//   20%
+//         opacity: 0.1
+//
+//   35%
+//     opacity: 0.25
+//
+//   60%
+//       opacity: 0.15
+//
+//   90%
+//       opacity: 0.3
 
 
 
