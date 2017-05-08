@@ -1425,7 +1425,7 @@ angular.module('weatherApp').directive('dailyWeather', function () {
 "use strict";
 'use strict';
 
-angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainService", "weatherData", function ($scope, $q, mainService, weatherData) {
+angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainService", function ($scope, $q, mainService) {
 
   $scope.getWeatherData = function () {
     var deferred = $q.defer();
@@ -1441,7 +1441,118 @@ angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainServic
       $scope.hourly[1].icon = 'snow';
       $scope.hourly[1].windSpeed = 10;
       $scope.hourly[1].precipIntensity = 1;
-      changeArt();
+      $scope.$watch('selectedTime', function (sliderTime) {
+
+        // Set variables for function
+
+        var current = $scope.hourly[sliderTime];
+        var time = current.time || 0;
+        var config = findSunPosition(time);
+        var moveClouds = function moveClouds() {
+          var tlCloudMovement = new TimelineMax();
+          tlCloudMovement.add('initial');
+          tlCloudMovement.to(pcLeftLarge, 4000 / current.windSpeed, { x: "0vw", repeat: -1, yoyo: true }, 'initial').to(pcLeftSmall, 2000 / current.windSpeed, { x: "150vw", repeat: -1, yoyo: true }, 'initial').to(pcRightLarge, 4000 / current.windSpeed, { x: "100vw", repeat: -1, yoyo: true }, 'initial').to(pcRightSmall, 1500 / current.windSpeed, { x: "250vw", repeat: -1, yoyo: true }, 'initial');
+        };
+
+        // Toggle rain or snow depending on conditions
+
+        if (current.icon.includes('snow')) {
+          if (!isItSnowing) {
+            isItRaining = false;
+            isItSnowing = true;
+            setTimeout(function () {
+              return makeItSnow(current.precipIntensity, current.windSpeed);
+            }, 500);
+          }
+        } else if (current.icon.includes('rain')) {
+          if (!isItRaining) {
+            isItSnowing = false;
+            isItRaining = true;
+            setTimeout(function () {
+              return makeItRain(current.precipIntensity, current.windSpeed);
+            }, 500);
+          }
+        } else {
+          isItSnowing = false;
+          isItRaining = false;
+        }
+
+        // Toggle gray sky background if it is raining, snowing, or cloud cover is over 75%
+
+        if (current.cloudCover >= 0.7 || isItSnowing || isItRaining) {
+          if (21 <= time || time < 6) {
+            tlHourChange.to(graySkyFilter, 0.5, { opacity: 1, backgroundImage: 'linear-gradient(0, #666, #444)' }, 'initial');
+          } else if (21 > time || time >= 6) {
+            tlHourChange.to(graySkyFilter, 0.5, { opacity: 1, backgroundImage: 'linear-gradient(0, #ccc, #aaa)' }, 'initial');
+          }
+        } else {
+          tlHourChange.to(graySkyFilter, 0.5, { opacity: 0 }, 'initial');
+        }
+
+        // Show top rain cloud if it is raining or snowing
+
+        if (isItRaining || isItSnowing) {
+          tlHourChange.to(pcTop, 0.5, { opacity: 1 }, 'initial');
+        } else if (!isItRaining && !isItSnowing) {
+          tlHourChange.to(pcTop, 0.5, { opacity: 0 }, 'initial');
+        }
+
+        // Show background precipitation clouds if it is raining, snowing, or if the cloud cover is greater than 50%
+
+        if (!precipCloudsShown) {
+          if (current.cloudCover > 0.05 && current.cloudCover < 0.25) {
+            tlHourChange.to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial');
+          } else if (current.cloudCover > 0.25 && current.cloudCover < 0.5) {
+            tlHourChange.to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial').to(pcRightSmall, 0.5, { right: "-20vw" }, 'initial');
+          } else if (current.cloudCover > 0.5 || isItRaining || isItSnowing) {
+            tlHourChange.to(pcLeftLarge, 0.5, { left: "-20vw" }, 'initial').to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial').to(pcRightLarge, 0.5, { right: "-20vw" }, 'initial').to(pcRightSmall, 0.5, { right: "-20vw", onComplete: moveClouds() }, 'initial');
+            precipCloudsShown = true;
+          }
+        } else if (!isItRaining && !isItSnowing) {
+          if (current.cloudCover < 0.5) {
+            tlHourChange.to([pcLeftLarge, pcLeftSmall], 0.5, { left: '-250vw' }, 'initial').to([pcRightSmall, pcRightLarge], 0.5, { right: '-200vw' }, 'initial');
+            precipCloudsShown = false;
+          }
+        }
+
+        // Add wind if windSpeed > 2mph. Animation speed is determined by wind speed
+
+        if (current.windSpeed >= 3) {
+
+          var rand = function rand(range, min) {
+            return ~~(Math.random() * range + min);
+          };
+
+          tlHourChange.set(windPath1, {
+            strokeWidth: "0.1%",
+            strokeDasharray: '200 7000',
+            strokeDashoffset: '7000',
+            animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear reverse infinite' }, 'initial');
+          tlHourChange.set(windPath3, {
+            strokeWidth: "0.1%",
+            strokeDasharray: '200 5000',
+            strokeDashoffset: '5000',
+            animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear reverse infinite' }, 'initial');
+          tlHourChange.set(windPath2, {
+            strokeWidth: "0.1%",
+            strokeDasharray: '150 7000',
+            strokeDashoffset: '7000',
+            animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear forwards infinite' }, 'initial');
+          tlHourChange.set(windPath4, {
+            strokeWidth: "0.1%",
+            strokeDasharray: '150 5000',
+            strokeDashoffset: '5000',
+            animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear forwards infinite' }, 'initial');
+        } else if (current.windSpeed < 3) {
+          tlHourChange.set([windPath1, windPath2, windPath3, windPath4], { strokeWidth: 0 }, 'initial');
+        }
+
+        // Change sun/moon position and colors of artwork
+
+        tlHourChange.to(artContainer, 0.2, { ease: Linear.easeNone, backgroundImage: 'radial-gradient(circle at ' + config[0] + '% ' + config[1] + '%, ' + config[2] }, 'initial').to(mountains, 0.2, { ease: Linear.easeNone, fill: config[3] }, 'initial').to(mountainAccents, 0.2, { ease: Linear.easeNone, fill: config[4] }, 'initial').to(ground, 0.2, { ease: Linear.easeNone, fill: config[5] }, 'initial').to(groundAccent, 0.2, { ease: Linear.easeNone, fill: config[6] }, 'initial').to(mountainLeft, 0.2, { ease: Linear.easeNone, fill: config[7] }, 'initial');
+
+        tlHourChange = new TimelineMax();
+      });
     });
   };
 
@@ -1461,6 +1572,13 @@ angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainServic
 
   var setCurrentState = function setCurrentState(sliderValue) {
     return $scope.hourly[sliderValue];
+  };
+
+  $scope.fiveDay = false;
+
+  $scope.toggleFiveDay = function () {
+    $scope.fiveDay = !$scope.fiveDay;
+    console.log($scope.fiveDay);
   };
 
   //------------------------------------------------------------------------------
@@ -1638,118 +1756,6 @@ angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainServic
   // moves progress of timeline to progress position based on slider position
   // TweenMax makes movements between progress smooth
 
-  $scope.$watch('selectedTime', function (sliderTime) {
-
-    // Set variables for function
-
-    var current = $scope.hourly[sliderTime];
-    var time = current.time || 0;
-    var config = findSunPosition(time);
-    var moveClouds = function moveClouds() {
-      var tlCloudMovement = new TimelineMax();
-      tlCloudMovement.add('initial');
-      tlCloudMovement.to(pcLeftLarge, 4000 / current.windSpeed, { x: "0vw", repeat: -1, yoyo: true }, 'initial').to(pcLeftSmall, 2000 / current.windSpeed, { x: "150vw", repeat: -1, yoyo: true }, 'initial').to(pcRightLarge, 4000 / current.windSpeed, { x: "100vw", repeat: -1, yoyo: true }, 'initial').to(pcRightSmall, 1500 / current.windSpeed, { x: "250vw", repeat: -1, yoyo: true }, 'initial');
-    };
-
-    // Toggle rain or snow depending on conditions
-
-    if (current.icon.includes('snow')) {
-      if (!isItSnowing) {
-        isItRaining = false;
-        isItSnowing = true;
-        setTimeout(function () {
-          return makeItSnow(current.precipIntensity, current.windSpeed);
-        }, 500);
-      }
-    } else if (current.icon.includes('rain')) {
-      if (!isItRaining) {
-        isItSnowing = false;
-        isItRaining = true;
-        setTimeout(function () {
-          return makeItRain(current.precipIntensity, current.windSpeed);
-        }, 500);
-      }
-    } else {
-      isItSnowing = false;
-      isItRaining = false;
-    }
-
-    // Toggle gray sky background if it is raining, snowing, or cloud cover is over 75%
-
-    if (current.cloudCover >= 0.7) {
-      if (21 <= time || time < 6) {
-        tlHourChange.to(graySkyFilter, 0.5, { opacity: 1, backgroundImage: 'linear-gradient(0, #666, #444)' }, 'initial');
-      } else if (21 > time || time >= 6) {
-        tlHourChange.to(graySkyFilter, 0.5, { opacity: 1, backgroundImage: 'linear-gradient(0, #ccc, #aaa)' }, 'initial');
-      }
-    } else {
-      tlHourChange.to(graySkyFilter, 0.5, { opacity: 0 }, 'initial');
-    }
-
-    // Show top rain cloud if it is raining or snowing
-
-    if (isItRaining || isItSnowing) {
-      tlHourChange.to(pcTop, 0.5, { opacity: 1 }, 'initial');
-    } else if (!isItRaining && !isItSnowing) {
-      tlHourChange.to(pcTop, 0.5, { opacity: 0 }, 'initial');
-    }
-
-    // Show background precipitation clouds if it is raining, snowing, or if the cloud cover is greater than 50%
-
-    if (!precipCloudsShown) {
-      if (current.cloudCover > 0.05 && current.cloudCover < 0.25) {
-        tlHourChange.to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial');
-      } else if (current.cloudCover > 0.25 && current.cloudCover < 0.5) {
-        tlHourChange.to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial').to(pcRightSmall, 0.5, { right: "-20vw" }, 'initial');
-      } else if (current.cloudCover > 0.5 || isItRaining || isItSnowing) {
-        tlHourChange.to(pcLeftLarge, 0.5, { left: "-20vw" }, 'initial').to(pcLeftSmall, 0.5, { left: "-10vw" }, 'initial').to(pcRightLarge, 0.5, { right: "-20vw" }, 'initial').to(pcRightSmall, 0.5, { right: "-20vw", onComplete: moveClouds() }, 'initial');
-        precipCloudsShown = true;
-      }
-    } else if (!isItRaining && !isItSnowing) {
-      if (current.cloudCover < 0.5) {
-        tlHourChange.to([pcLeftLarge, pcLeftSmall], 0.5, { left: '-250vw' }, 'initial').to([pcRightSmall, pcRightLarge], 0.5, { right: '-200vw' }, 'initial');
-        precipCloudsShown = false;
-      }
-    }
-
-    // Add wind if windSpeed > 2mph. Animation speed is determined by wind speed
-
-    if (current.windSpeed >= 3) {
-
-      var rand = function rand(range, min) {
-        return ~~(Math.random() * range + min);
-      };
-
-      tlHourChange.set(windPath1, {
-        strokeWidth: "0.1%",
-        strokeDasharray: '200 7000',
-        strokeDashoffset: '7000',
-        animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear reverse infinite' }, 'initial');
-      tlHourChange.set(windPath3, {
-        strokeWidth: "0.1%",
-        strokeDasharray: '200 5000',
-        strokeDashoffset: '5000',
-        animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear reverse infinite' }, 'initial');
-      tlHourChange.set(windPath2, {
-        strokeWidth: "0.1%",
-        strokeDasharray: '150 7000',
-        strokeDashoffset: '7000',
-        animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear forwards infinite' }, 'initial');
-      tlHourChange.set(windPath4, {
-        strokeWidth: "0.1%",
-        strokeDasharray: '150 5000',
-        strokeDashoffset: '5000',
-        animation: 'wind ' + ~~rand(3, 30 / current.windSpeed) + 's linear forwards infinite' }, 'initial');
-    } else if (current.windSpeed < 3) {
-      tlHourChange.set([windPath1, windPath2, windPath3, windPath4], { strokeWidth: 0 }, 'initial');
-    }
-
-    // Change sun/moon position and colors of artwork
-
-    tlHourChange.to(artContainer, 0.2, { ease: Linear.easeNone, backgroundImage: 'radial-gradient(circle at ' + config[0] + '% ' + config[1] + '%, ' + config[2] }, 'initial').to(mountains, 0.2, { ease: Linear.easeNone, fill: config[3] }, 'initial').to(mountainAccents, 0.2, { ease: Linear.easeNone, fill: config[4] }, 'initial').to(ground, 0.2, { ease: Linear.easeNone, fill: config[5] }, 'initial').to(groundAccent, 0.2, { ease: Linear.easeNone, fill: config[6] }, 'initial').to(mountainLeft, 0.2, { ease: Linear.easeNone, fill: config[7] }, 'initial');
-
-    tlHourChange = new TimelineMax();
-  });
 
   //------------------------------------------------------------------------------
   //            Precipitation Canvas
@@ -1945,8 +1951,4 @@ angular.module('weatherApp').controller('homeCtrl', ["$scope", "$q", "mainServic
   //
   //
   // };
-}]); //---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
+}]);

@@ -31,7 +31,7 @@ gulp.task('css', function() {
 
 gulp.task('views', function() {
   gulp.src(paths.viewsSource)
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./'))
 })
 
 gulp.task('watch', function() {
