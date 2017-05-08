@@ -24,6 +24,10 @@ nav
   flex-direction: column
   justify-content: center
   align-items: center
+  position: fixed
+  bottom: 0
+  z-index: 999
+  font-size: 12px
 
 .data-container
   width: 100%
@@ -37,7 +41,7 @@ nav
 
 
 #artwork-container
-  background-image: radial-gradient(circle at 0% 80%, #e3e5f3, #e38c59, #a33d4b,#46142b)
+  // background-image: radial-gradient(circle at 0% 80%, #e3e5f3, #e38c59, #a33d4b,#46142b)
   z-index: -1
 
 .background
@@ -64,14 +68,102 @@ nav
   left: 0
 
 
+.cloud
+  position: fixed
+
+.cloud1
+  top: 50
+  left: 50
+  height: 30vh
+
+#precip-cloud-right-large
+      height: 60vh
+      right: -200vw
+      top: 5vh
+      path
+        fill: rgba(255,255,255,0.5)
+
+#precip-cloud-right-small
+      height: 30vh
+      right: -200vw
+      top: 30vh
+      path
+        fill: rgba(255,255,255,0.5)
+
+#precip-cloud-left-large
+      height: 55vh
+      left: -200vw
+      top: 10vh
+      path
+        fill: rgba(255,255,255,0.5)
+
+#precip-cloud-left-small
+      height: 30vh
+      left: -200vw
+      top: 20vh
+      path
+        fill: rgba(255,255,255,0.5)
+
+#precip-cloud-top
+      height: 20vh
+      left: 0
+      top: 0
+      filter: drop-shadow(2px 2px 5px #888)
+
+.gray-sky
+  position: fixed
+  width: 100vw
+  height: 100vh
+  background-image: linear-gradient(0, #ccc, #aaa)
+
+
+.windPath
+  position: fixed
+  stroke: #ffffff
+  padding-top: 15px
+  width: 150vw
+
+
+#windPath1
+  top: 30vh
+  stroke-width: 0
+  // stroke-dasharray: 200 5000
+  // stroke-dashoffset: 5000
+  // animation: wind 4s linear forwards infinite
+
+#windPath2
+  top: 60vh
+  stroke-width: 0
+  // stroke-dasharray: 300 7000
+  // stroke-dashoffset: 7000
+  // animation: wind 6s linear reverse infinite
+
+#windPath3
+  top: 45vh
+  left: -15vw
+  stroke-width: 0
+  // stroke-dasharray: 200 7000
+  // stroke-dashoffset: 7000
+  // animation: wind 5s linear forwards infinite
+
+#windPath4
+  top: 15vh
+  left: -27vw
+  stroke-width: 0
+  // stroke-dasharray: 300 5000
+  // stroke-dashoffset: 5000
+  // animation: wind 6s linear reverse infinite
+
+@keyframes wind
+  to
+    stroke-dashoffset: 0
+
+
+
 // .sun-pulse
 //   background-image: radial-gradient(circle at 50% 60%,rgb(255,194,82), rgb(70,20,43) 65%, rgba(0,0,0,0))
 //   opacity: 0.2
 //   animation: pulse 3s ease-in-out infinite
-
-
-.sun
-    // background-image: radial-gradient(circle at 50% 60%, rgb(255,194,82) 3%, rgba(0,0,0,0) 10%, rgba(0,0,0,0))
 
 //
 // @keyframes pulse
@@ -90,6 +182,19 @@ nav
 //   90%
 //       opacity: 0.3
 
+
+//-----------------------------------------------------------------------------
+//                               Canvas Styling
+//-----------------------------------------------------------------------------
+
+
+canvas
+  position: fixed
+  background: rgba(0,0,0,0)
+  width: 200vw
+  height: 85vh
+  top: 15vh
+  left: -10vw
 
 
 //-----------------------------------------------------------------------------
@@ -110,14 +215,14 @@ nav
   height: 30px
   cursor: pointer
   animate: 1s
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.5)
+  // box-shadow: inset 0 0 15px rgba(125,125,125,0.5)
   border-radius: 15px
 
 
 #timeSlider::-webkit-slider-thumb
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.5)
+  background: rgba(255,255,255,0.5)
   height: 30px
-  width: 30px
+  width: 45px
   border-radius: 50px
   cursor: pointer
   -webkit-appearance: none
@@ -133,7 +238,7 @@ nav
 
 
 #timeSlider::-moz-range-thumb
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.5)
+  background: rgba(0,0,0,0.5)
   height: 30px
   width: 30px
   border-radius: 50px
@@ -157,7 +262,7 @@ nav
   box-shadow: inset 0 0 15px rgba(0,0,0,0.5)
 
 #timeSlider::-ms-thumb
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.5)
+  background: rgba(0,0,0,0.5)
   height: 30px
   width: 30px
   border-radius: 50px
