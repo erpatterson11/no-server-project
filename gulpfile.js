@@ -2,7 +2,8 @@ var gulp = require('gulp'),
   concat = require('gulp-concat'),
   annotate = require('gulp-ng-annotate'),
   sass = require('gulp-sass'),
-  babel = require('gulp-babel');
+  babel = require('gulp-babel'),
+  delpoy = require('gulp-gh-pages');
 
 
 var paths = {
@@ -37,6 +38,11 @@ gulp.task('watch', function() {
   gulp.watch(paths.jsSource, ['js']);
   gulp.watch(paths.cssSource, ['css']);
   gulp.watch(paths.viewsSource, ['views']);
+})
+
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+    .pipe(deploy())
 })
 
 gulp.task('default', ['js', 'css', 'views','watch'])

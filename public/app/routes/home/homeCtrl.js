@@ -233,7 +233,7 @@ $scope.$watch('selectedTime', function(sliderTime) {
   }
 
 
-// Toggle rain or snow depending on hourly condition
+// Toggle rain or snow depending on conditions
 
   if (current.icon.includes('snow')) {
     if (!isItSnowing) {
@@ -346,10 +346,8 @@ if (current.windSpeed >= 3) {
  });
 
  //------------------------------------------------------------------------------
- //            Precipitation
+ //            Precipitation Canvas
  //------------------------------------------------------------------------------
-
-
 
  var makeItSnow = function(precipIntensity, windSpeed) {
                    var ctx = document.getElementById('precipCanvas').getContext('2d');
@@ -496,7 +494,52 @@ if (current.windSpeed >= 3) {
                    }, 30);
  };
 
+ //---------------------------------------------------------------------------
+ //                 Stars Canvas
+ //---------------------------------------------------------------------------
 
+ // var starShine = function() {
+ //                   var ctx = document.getElementById('starsCanvas').getContext('2d');
+ //                   ctx.canvas.width = window.innerWidth;
+ //                   ctx.canvas.height = window.innerHeight;
+ //                   var cW = ctx.canvas.width, cH = ctx.canvas.height;
+ //                   var starsTemp = [];
+ //                   var stars2 = [];
+ //                   var stars3 = [];
+ //                   var stars4 = [];
+ //                   var stars5 = [];
+ //                   var maxStars = 150;
+ //
+ //                   function makeStar(arr) {
+ //                     var x = ~~(Math.random()*cW)+1;
+ //                     var y = ~~(Math.random()*cH)+1;
+ //                     var s = ~~(Math.random()*2)+1;
+ //                     var inc = true;
+ //                     arr.push({'x':x,'y':y,'s':s})
+ //                   }
+ //
+ //                   for (let j = 0; j < 5; j++) {
+ //                     for (let i = 0; i < maxStars/5; i++) {
+ //                       makeStar()
+ //                     }
+ //
+ //                     for(let i = 0; i < stars[j].length; i++) {
+ //                       ctx.fillStyle = 'rgb(255,255,255)';
+ //                       ctx.beginPath();
+ //                         // arc(x,y,radius,startAndle,endAndle,anticlockwise)
+ //                       ctx.arc(stars[i].x,stars[i].y, stars[i].s*0.5, 0, Math.PI*2, false);
+ //                       ctx.globalAlpha = stars[i].s
+ //                       ctx.fill();
+ //                      }
+ //                    }
+ //
+ //
+ //                   function twinkle(index) {
+ //                      TweenMax.to(stars)
+ //                   }
+ //
+ //
+ // };
 
 }) //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
