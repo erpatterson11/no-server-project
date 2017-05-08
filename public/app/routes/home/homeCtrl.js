@@ -53,7 +53,9 @@ $scope.getWeatherData = function() {
 
     // Toggle gray sky background if it is raining, snowing, or cloud cover is over 75%
 
-      if (current.cloudCover>=0.7 || isItSnowing || isItRaining) {
+console.log(current.precipIntensity)
+
+      if (current.cloudCover>=0.7 || current.precipIntensity > 0.25) {
           if (21 <= time || time < 6) {
               tlHourChange.to(graySkyFilter, 0.5, {opacity: 1, backgroundImage: 'linear-gradient(0, #666, #444)'}, 'initial')
             } else if (21 > time || time >= 6) {
@@ -224,11 +226,11 @@ $scope.toggleFiveDay = function() {
   var groundAccentFillDay = 'hsl(78,76%,72%)'
   var leftMountainFillDay = 'hsl(41,76%,22%)'
 
-  var mountainFillSunrise1 = '#7f5f4c'
-  var mountainAccentFillSunrise1 = '#FFE9AD'
-  var groundFillSunrise1 = '#6c8c21'
-  var groundAccentFillSunrise1 = '#a5b754'
-  var leftMountainFillSunrise1 = '#724f0c'
+  var mountainFillSunrise3 = '#7f5f4c'
+  var mountainAccentFillSunrise3 = '#FFE9AD'
+  var groundFillSunrise3 = '#6c8c21'
+  var groundAccentFillSunrise3 = '#a5b754'
+  var leftMountainFillSunrise3 = '#724f0c'
 
   var mountainFillSunrise2 = '#704545'
   var mountainAccentFillSunrise2 = '#ffa100'
@@ -236,11 +238,11 @@ $scope.toggleFiveDay = function() {
   var groundAccentFillSunrise2 = '#2e3a30'
   var leftMountainFillSunrise2 = '#333333'
 
-  var mountainFillSunrise3 = '#5b343a'
-  var mountainAccentFillSunrise3 = '#aa4419'
-  var groundFillSunrise3 = '#50450b'
-  var groundAccentFillSunrise3 = '#2e3a30'
-  var leftMountainFillSunrise3 = '#333333'
+  var mountainFillSunrise1 = '#5b343a'
+  var mountainAccentFillSunrise1 = '#aa4419'
+  var groundFillSunrise1 = '#50450b'
+  var groundAccentFillSunrise1 = '#2e3a30'
+  var leftMountainFillSunrise1 = '#333333'
 
   var mountainFillSunset1 = '#7f5f4c'
   var mountainAccentFillSunset1 = '#FFE9AD'
@@ -280,11 +282,11 @@ $scope.toggleFiveDay = function() {
   var findSunPosition = function(time) {
     var hour = $scope.unixTo24Hour(time);
     var timePositions = {
-      '0': [50, 10, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
-      '1': [70, 25, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
-      '2': [85, 40, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
-      '3': [100, 120, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
-      '4': [100, 270, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
+      '0': [30, 25, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
+      '1': [50, 20, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
+      '2': [70, 25, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
+      '3': [85, 40, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
+      '4': [100, 80, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
       '5': [50, 420, nightColors, mountainFillNight, mountainAccentFillNight, groundFillNight, groundAccentFillNight, leftMountainFillNight, stars=true],
       '6': [0, 270, sunriseColors1, mountainFillSunrise1, mountainAccentFillSunrise1, groundFillSunrise1, groundAccentFillSunrise1, leftMountainFillSunrise1, stars=true],
       '7': [8, 69, sunriseColors2, mountainFillSunrise2, mountainAccentFillSunrise2, groundFillSunrise2, groundAccentFillSunrise2, leftMountainFillSunrise2, stars=true],

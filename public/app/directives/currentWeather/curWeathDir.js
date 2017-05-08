@@ -11,10 +11,7 @@ angular.module('weatherApp').directive('currentWeather', function() {
         precipType: '@',
         temp: '@',
         wind: '@'
-      },
-      controller: function($scope, weatherData) {
-        $scope.getCurrWeath = weatherData.allData.data.currently;
-      },
+      }
     }
 
 
