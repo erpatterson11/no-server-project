@@ -18,28 +18,6 @@ angular.module('weatherApp').service('mainService', ["$http", function ($http) {
 'use strict';
 
 
-
-angular.module('weatherApp').directive('currentWeather', function () {
-
-  return {
-    restrict: 'E',
-    templateUrl: './app/directives/currentWeather/curWeathTempl.html',
-    scope: {
-      cloudCover: '@',
-      icon: '@',
-      precipProb: '@',
-      precipIntensity: '@',
-      precipType: '@',
-      temp: '@',
-      wind: '@'
-    },
-    controller: ["$scope", "weatherData", function ($scope, weatherData) {
-      $scope.getCurrWeath = weatherData.allData.data.currently;
-    }]
-  };
-}); //-------------------------------------------------------------------------
-'use strict';
-
 angular.module('weatherApp').directive('dailyWeather', function () {
 
   return {
