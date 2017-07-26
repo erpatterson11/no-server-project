@@ -12,7 +12,7 @@ angular.module('weatherApp', ['ui.router']).config(["$stateProvider", "$urlRoute
 angular.module('weatherApp').service('mainService', ["$http", function ($http) {
 
       this.getWeatherData = function (latitude, longitude) {
-            return $http.get('https://api.darksky.net/forecast/51ad5a6fd44830ae0a78d025de05e749/' + latitude + ',' + longitude);
+            return $http.get('https://api.darksky.net/forecast/96b4eea61237b84d5a37ba9fd4faaef2/' + latitude + ',' + longitude);
       };
 }]);
 'use strict';
